@@ -12,7 +12,7 @@
     "lint": "npm run lint:js && npm run lint:style"
   },
   "dependencies": {
-    "@chakra-ui/nuxt": "^0.3.0",
+    "@chakra-ui/nuxt": "^0.3.4",
     "@nuxt/http": "^0.6.4",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/emotion": "^0.1.0",
