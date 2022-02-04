@@ -5,7 +5,7 @@
     </CBox>
     <Container>
       <CGrid template-columns="repeat(12, 1fr)" gap="6">
-        <CBox grid-column-start="4" grid-column-end="10">
+        <CBox grid-column-start="2" grid-column-end="12">
           <CBox my="4">
             <CHeading as="h1" font-size="2xl">{{ stop.stopName }}</CHeading>
             <CBox color="gray.500">
@@ -64,7 +64,7 @@
           <CButton
             d="block"
             ml="auto"
-            :is-disabled="!answers[step - 1].value"
+            :is-disabled="answers[step - 1].value === ''"
             variant-color="blue"
             size="lg"
             @click="next()"
@@ -77,7 +77,7 @@
             ml="auto"
             variant-color="blue"
             :is-loading="isSaving"
-            :is-disabled="!answers[step - 1].value"
+            :is-disabled="answers[step - 1].value === ''"
             size="lg"
             @click="submit()"
           >
