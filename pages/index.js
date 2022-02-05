@@ -1,6 +1,5 @@
 import DefaultLayout from '@/layouts/default'
 import { prismaGetStops } from '@/lib/prisma/stops'
-import { useGetStops } from '@/lib/react-query/stops'
 import {
   AspectRatio,
   Box,
@@ -17,11 +16,10 @@ import {
   Tr,
 } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { dehydrate, QueryClient } from 'react-query'
 import { useTable } from 'react-table'
 import NextLink from 'next/link'
 
-export default function Home() {
+export default function Home({ stops }) {
   return (
     <DefaultLayout>
       <Container maxW="container.lg" pt="12">
@@ -38,15 +36,14 @@ export default function Home() {
           </AspectRatio>
         </Box>
         <Box bg="white" p="4" shadow="sm" rounded="md">
-          <DataTable />
+          <DataTable data={stops} />
         </Box>
       </Container>
     </DefaultLayout>
   )
 }
 
-const DataTable = () => {
-  const { data: stops } = useGetStops()
+const DataTable = ({ data }) => {
   const getColor = (score) => {
     return score >= 90 ? 'green' : score < 90 && score >= 50 ? 'yellow' : 'red'
   }
@@ -145,7 +142,7 @@ const DataTable = () => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
-      data: useMemo(() => stops || [], [stops]),
+      data: useMemo(() => data || [], [data]),
     })
 
   return (
@@ -180,26 +177,23 @@ const DataTable = () => {
   )
 }
 
-export const getServerSideProps = async () => {
-  const queryClient = new QueryClient()
+export async function getServerSideProps() {
   const stops = await prismaGetStops()
-
-  await queryClient.prefetchQuery(['stops', null], async () =>
-    (stops || []).map((s) => ({
-      ...s,
-      createdAt: s.createdAt.toISOString(),
-      updatedAt: s.updatedAt.toISOString(),
-      Watchers: s.Watchers.map((w) => ({
-        ...w,
-        createdAt: w.createdAt.toISOString(),
-        updatedAt: w.updatedAt.toISOString(),
-      })),
-    }))
-  )
 
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      stops: stops.map((s) => ({
+        ...s,
+        createdAt: s.createdAt.toISOString(),
+        updatedAt: s.updatedAt.toISOString(),
+        Watchers: s.Watchers
+          ? {
+              ...s.Watchers,
+              createdAt: s.Watchers.createdAt.toISOString(),
+              updatedAt: s.Watchers.updatedAt.toISOString(),
+            }
+          : null,
+      })),
     },
   }
 }

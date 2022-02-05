@@ -4,7 +4,9 @@ import { Box } from '@chakra-ui/react'
 export default function DefaultLayout({ children }) {
   return (
     <Box>
-      <Navbar />
+      <Box position="relative" zIndex="1">
+        <Navbar />
+      </Box>
       <Box>{children}</Box>
     </Box>
   )
