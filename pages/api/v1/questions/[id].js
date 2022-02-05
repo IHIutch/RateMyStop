@@ -2,8 +2,8 @@ import {
   prismaDeleteQuestion,
   prismaGetQuestion,
   prismaPutQuestion,
-} from '@/utils/prisma/questions'
-import { resStatusType } from '@/utils/types'
+} from '@/lib/prisma/questions'
+import { apiStatusType } from '@/lib/types'
 import { withSentry } from '@sentry/nextjs'
 
 const handler = async (req, res) => {
@@ -15,9 +15,9 @@ const handler = async (req, res) => {
       try {
         const { id } = req.query
         const data = await prismaGetQuestion({ id })
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
     // Update
@@ -26,9 +26,9 @@ const handler = async (req, res) => {
         const { id } = req.query
         const payload = req.body
         const data = await prismaPutQuestion({ id }, payload)
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
     // Delete
@@ -36,9 +36,9 @@ const handler = async (req, res) => {
       try {
         const { id } = req.query
         const data = await prismaDeleteQuestion({ id })
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
 

@@ -1,5 +1,5 @@
-import { prismaGetWatchers, prismaPostWatcher } from '@/utils/prisma/watchers'
-import { resStatusType } from '@/utils/types'
+import { prismaGetWatchers, prismaPostWatcher } from '@/lib/prisma/watchers'
+import { apiStatusType } from '@/lib/types'
 import { withSentry } from '@sentry/nextjs'
 
 const handler = async (req, res) => {
@@ -10,9 +10,9 @@ const handler = async (req, res) => {
     case 'GET':
       try {
         const data = await prismaGetWatchers(req.query)
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
 
@@ -20,9 +20,9 @@ const handler = async (req, res) => {
     case 'POST':
       try {
         const data = await prismaPostWatcher(req.body)
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
 

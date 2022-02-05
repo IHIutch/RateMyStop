@@ -2,8 +2,8 @@ import {
   prismaDeleteCategory,
   prismaGetCategory,
   prismaPutCategory,
-} from '@/utils/prisma/categories'
-import { resStatusType } from '@/utils/types'
+} from '@/lib/prisma/categories'
+import { apiStatusType } from '@/lib/types'
 import { withSentry } from '@sentry/nextjs'
 
 const handler = async (req, res) => {
@@ -15,9 +15,9 @@ const handler = async (req, res) => {
       try {
         const { id } = req.query
         const data = await prismaGetCategory({ id })
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
     // Update
@@ -26,9 +26,9 @@ const handler = async (req, res) => {
         const { id } = req.query
         const payload = req.body
         const data = await prismaPutCategory({ id }, payload)
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
     // Delete
@@ -36,9 +36,9 @@ const handler = async (req, res) => {
       try {
         const { id } = req.query
         const data = await prismaDeleteCategory({ id })
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
 

@@ -2,8 +2,8 @@ import {
   prismaDeleteStop,
   prismaGetStop,
   prismaPutStop,
-} from '@/utils/prisma/stops'
-import { resStatusType } from '@/utils/types'
+} from '@/lib/prisma/stops'
+import { apiStatusType } from '@/lib/types'
 import { withSentry } from '@sentry/nextjs'
 
 const handler = async (req, res) => {
@@ -15,9 +15,9 @@ const handler = async (req, res) => {
       try {
         const { id } = req.query
         const data = await prismaGetStop({ id })
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
     // Update
@@ -26,9 +26,9 @@ const handler = async (req, res) => {
         const { id } = req.query
         const payload = req.body
         const data = await prismaPutStop({ id }, payload)
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
     // Delete
@@ -36,9 +36,9 @@ const handler = async (req, res) => {
       try {
         const { id } = req.query
         const data = await prismaDeleteStop({ id })
-        res.status(resStatusType.SUCCESS).json(data)
+        res.status(apiStatusType.SUCCESS).json(data)
       } catch (error) {
-        res.status(resStatusType.BAD_REQUEST).json({ error: error.message })
+        res.status(apiStatusType.BAD_REQUEST).json({ error: error.message })
       }
       break
 
