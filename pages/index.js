@@ -18,11 +18,17 @@ import {
 import { useMemo } from 'react'
 import { useTable } from 'react-table'
 import NextLink from 'next/link'
+import dynamic from 'next/dynamic'
+
+const DashboardMap = dynamic(() => import('@/components/dashboardMap'), {
+  // loading: () => <p>Loading...</p>,
+  ssr: false,
+})
 
 export default function Home({ stops }) {
   return (
     <DefaultLayout>
-      <Container maxW="container.lg" pt="12">
+      <Container maxW="container.xl" pt="12">
         <Box mb="8">
           <Heading>Buffalo, NY</Heading>
           <Text>
@@ -30,9 +36,17 @@ export default function Home({ stops }) {
             stop is rated
           </Text>
         </Box>
-        <Box bg="white" p="4" shadow="sm" rounded="md" mb="8">
-          <AspectRatio ratio={16 / 9}>
-            <Box bg="gray.100"></Box>
+        <Box
+          bg="white"
+          p="4"
+          shadow="sm"
+          rounded="md"
+          mb="8"
+          position="relative"
+          zIndex="0"
+        >
+          <AspectRatio ratio={21 / 9}>
+            <DashboardMap markers={stops} />
           </AspectRatio>
         </Box>
         <Box bg="white" p="4" shadow="sm" rounded="md">
