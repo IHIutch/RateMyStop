@@ -22,7 +22,7 @@
     "prisma": "^3.9.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-hook-form": "^7.26.0",
+    "react-hook-form": "^7.26.1",
     "react-leaflet": "^3.2.5",
     "react-query": "^3.34.12",
     "react-table": "^7.7.0",

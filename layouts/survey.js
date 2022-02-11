@@ -1,16 +1,63 @@
 import React from 'react'
-import { Box, Button, Flex, Link } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Text,
+} from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import NextLink from 'next/link'
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useFormContext,
+} from 'react-hook-form'
 
-export default function SurveyLayout({ children }) {
+export default function SurveyLayout({ stop, children }) {
+  const methods = useForm()
+  useFieldArray({
+    control: methods.control,
+    name: 'survey',
+  })
+
+  return (
+    <FormProvider {...methods}>
+      <Container maxW="container.lg" pt="12">
+        <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6">
+          <GridItem colStart={{ md: '2' }} colSpan={{ md: '8' }}>
+            <Box mb="4">
+              <Heading fontSize="2xl">{stop.stopName || ''}</Heading>
+              <Text fontWeight="semibold" color="gray.600">
+                Stop ID: {stop.stopCode || ''}
+              </Text>
+            </Box>
+            <Box>{children}</Box>
+          </GridItem>
+        </Grid>
+      </Container>
+      <Footer />
+    </FormProvider>
+  )
+}
+
+const Footer = () => {
   const router = useRouter()
   const { id, step } = router.query
 
+  const {
+    watch,
+    formState: { dirtyFields },
+  } = useFormContext()
+
+  const watchValues = watch('survey')
+  console.log(1, { dirtyFields, watchValues })
+
   return (
     <Box>
-      <Box>SurveyLayout</Box>
-      <Box>{children}</Box>
       {step && (
         <Flex
           position="fixed"
@@ -21,18 +68,25 @@ export default function SurveyLayout({ children }) {
           px="6"
         >
           <Box>
-            <NextLink href={`/survey/${id}/${parseInt(step) - 1}`} passHref>
-              <Button as={Link} isDisabled={parseInt(step) - 1 === 0}>
-                Prev
-              </Button>
-            </NextLink>
+            <Button
+              isDisabled={parseInt(step) - 1 === 0}
+              onClick={() => router.back()}
+            >
+              Prev
+            </Button>
           </Box>
           <Box ml="auto">
-            <NextLink href={`/survey/${id}/${parseInt(step) + 1}`} passHref>
-              <Button as={Link} colorScheme="blue">
-                Next
-              </Button>
-            </NextLink>
+            <Button
+              isDisabled={!dirtyFields?.survey?.[step - 1]?.answer}
+              colorScheme="blue"
+              onClick={() =>
+                router.push(`/survey/${id}/${parseInt(step) + 1}`, undefined, {
+                  shallow: true,
+                })
+              }
+            >
+              Next
+            </Button>
           </Box>
         </Flex>
       )}
