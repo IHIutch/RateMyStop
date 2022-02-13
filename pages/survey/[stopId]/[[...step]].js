@@ -209,10 +209,10 @@ export const getServerSideProps = async ({ query }) => {
         updatedAt: watcher.updatedAt.toISOString(),
       },
       answers,
-      questions: questions.map((question) => ({
-        ...question,
-        createdAt: question.createdAt.toISOString(),
-        updatedAt: question.updatedAt.toISOString(),
+      questions: questions.map((q) => ({
+        ...q,
+        createdAt: q.createdAt.toISOString(),
+        updatedAt: q.updatedAt.toISOString(),
       })),
     },
     // redirect: {
