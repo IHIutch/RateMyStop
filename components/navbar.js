@@ -39,7 +39,7 @@ const Navbar = () => {
   ]
 
   return (
-    <Box mt="16">
+    <Box>
       <Box
         as="nav"
         bg="white"

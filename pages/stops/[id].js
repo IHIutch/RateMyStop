@@ -53,7 +53,7 @@ export default function SingleStop({ stop }) {
 
 export async function getServerSideProps({ query }) {
   const { id } = query
-  const stop = await prismaGetStop({ id })
+  const stop = await prismaGetStop({ id: parseInt(id) })
 
   return {
     props: {

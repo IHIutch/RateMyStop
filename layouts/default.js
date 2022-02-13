@@ -7,7 +7,7 @@ export default function DefaultLayout({ children }) {
       <Box position="relative" zIndex="1">
         <Navbar />
       </Box>
-      <Box>{children}</Box>
+      <Box pt="16">{children}</Box>
     </Box>
   )
 }
