@@ -24,30 +24,53 @@ import {
   useFormContext,
 } from 'react-hook-form'
 import NextLink from 'next/link'
+import { prismaGetStop } from '@/lib/prisma/stops'
+import { prismaGetQuestions } from '@/lib/prisma/questions'
+import { prismaGetWatcher } from '@/lib/prisma/watchers'
 
-export default function SurveyStep({ stop }) {
+export default function SurveyStep({ stop, watcher, questions, answers }) {
   const router = useRouter()
-  const { step } = router.query
+  const { step, stopId } = router.query
 
-  const methods = useForm()
+  const { handleSubmit, ...methods } = useForm({
+    defaultValues: {
+      survey: answers.map((a) => ({
+        questionId: a.questionId,
+        question: questions.find((q) => q.id === a.questionId).text,
+        answer: '',
+      })),
+    },
+  })
+
+  const onSubmit = async (form) => {
+    if (parseInt(step) === answers.length) {
+      console.log({ form })
+    } else {
+      router.push(`/survey/${stopId}/${parseInt(step) + 1}`, undefined, {
+        shallow: true,
+      })
+    }
+  }
 
   return (
     <DefaultLayout>
       <FormProvider {...methods}>
-        <Container maxW="container.lg" pt="12">
-          <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6">
-            <GridItem colStart={{ md: '2' }} colSpan={{ md: '8' }}>
-              <Box mb="4">
-                <Heading fontSize="2xl">{stop.stopName || ''}</Heading>
-                <Text fontWeight="semibold" color="gray.600">
-                  Stop ID: {stop.stopCode || ''}
-                </Text>
-              </Box>
-              <Box>{step ? <Question /> : <Start />}</Box>
-            </GridItem>
-          </Grid>
-        </Container>
-        <Footer />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Container maxW="container.lg" pt="12">
+            <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6">
+              <GridItem colStart={{ md: '3' }} colSpan={{ md: '8' }}>
+                <Box mb="4">
+                  <Heading fontSize="2xl">{stop.stopName}</Heading>
+                  <Text fontWeight="semibold" color="gray.600">
+                    Stop ID: {stop.stopCode}
+                  </Text>
+                </Box>
+                <Box>{step ? <Question /> : <Start />}</Box>
+              </GridItem>
+            </Grid>
+          </Container>
+          <Footer />
+        </form>
       </FormProvider>
     </DefaultLayout>
   )
@@ -74,15 +97,22 @@ const Question = () => {
   const router = useRouter()
   const { step } = router.query
 
+  const { getValues } = useFormContext()
+  const answers = getValues('survey')
+
+  const { question } = answers[parseInt(step) - 1]
+
   return (
     <Box bg="white" shadow="sm" p="8">
       <Box mb="8">
-        <Text>Question {step} of 5</Text>
+        <Text>
+          Question {step} of {answers.length}
+        </Text>
       </Box>
       <Box>
         <FormControl as="fieldset">
           <FormLabel as="legend" fontSize="2xl">
-            What is your favorite color?
+            {question}
           </FormLabel>
           <Controller
             key={step}
@@ -104,16 +134,14 @@ const Question = () => {
 
 const Footer = () => {
   const router = useRouter()
-  const { stopId, step } = router.query
+  const { step } = router.query
 
   const {
-    watch,
+    getValues,
     formState: { dirtyFields },
   } = useFormContext()
 
-  const watchValues = watch('survey')
-  console.log(1, { dirtyFields, watchValues })
-
+  const answers = getValues('survey')
   return (
     <Box>
       {step && (
@@ -135,19 +163,11 @@ const Footer = () => {
           </Box>
           <Box ml="auto">
             <Button
+              type="submit"
               isDisabled={!dirtyFields?.survey?.[step - 1]?.answer}
               colorScheme="blue"
-              onClick={() =>
-                router.push(
-                  `/survey/${stopId}/${parseInt(step) + 1}`,
-                  undefined,
-                  {
-                    shallow: true,
-                  }
-                )
-              }
             >
-              Next
+              {parseInt(step) === answers.length ? 'Submit' : 'Next'}
             </Button>
           </Box>
         </Flex>
@@ -157,25 +177,43 @@ const Footer = () => {
 }
 
 export const getServerSideProps = async ({ query }) => {
-  console.log({ query })
-  const answers = [
-    'This bus stop is shaded from the sun',
-    'This bus stop is wheelchair accessible',
-    'This bus stop is open to the public',
-    'This bus stop is open to the public',
-    'This stop has a nearby garbage can',
-  ]
+  const stop = await prismaGetStop({ id: parseInt(query.stopId) })
+  const watcher = await prismaGetWatcher({ stopId: parseInt(query.stopId) })
+  const questions = await prismaGetQuestions()
+
+  const questionCount = 5
+  let watcherStatus = [...watcher.status]
+
+  // TODO: Make sure you check to make sure a a duplicate question isnt added after the watcher is refilled
+  const answers = [...new Array(questionCount)].reduce((acc) => {
+    const idx = Math.floor(Math.random() * watcherStatus.length)
+    const question = questions.find(
+      (q) => parseInt(q.id) === parseInt(watcherStatus[idx])
+    )
+    watcherStatus.splice(idx, 1)
+    if (!watcherStatus.length)
+      watcherStatus = questions.map((q) => parseInt(q.id))
+    return [...acc, { questionId: question.id }]
+  }, [])
 
   return {
     props: {
-      answers,
       stop: {
-        id: '1',
-        stopCode: '48050',
-        stopName: 'Sheridan Dr & Colvin Blvd',
-        stopLat: '1',
-        stopLon: '1',
+        ...stop,
+        createdAt: stop.createdAt.toISOString(),
+        updatedAt: stop.updatedAt.toISOString(),
       },
+      watcher: {
+        ...watcher,
+        createdAt: watcher.createdAt.toISOString(),
+        updatedAt: watcher.updatedAt.toISOString(),
+      },
+      answers,
+      questions: questions.map((question) => ({
+        ...question,
+        createdAt: question.createdAt.toISOString(),
+        updatedAt: question.updatedAt.toISOString(),
+      })),
     },
     // redirect: {
     //   permanent: false,
