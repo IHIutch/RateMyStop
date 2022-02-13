@@ -23,7 +23,7 @@ export default function SurveyComplete({ stop }) {
     <DefaultLayout>
       <Container maxW="container.lg" pt="12">
         <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6">
-          <GridItem colStart={{ md: '3' }} colSpan={{ md: '8' }}>
+          <GridItem colStart={{ md: '4' }} colSpan={{ md: '6' }}>
             <Box mb="4">
               <Heading fontSize="2xl">{stop.stopName}</Heading>
               <Text fontWeight="semibold" color="gray.600">
