@@ -19,6 +19,7 @@ import { useMemo } from 'react'
 import { useTable } from 'react-table'
 import NextLink from 'next/link'
 import dynamic from 'next/dynamic'
+import mean from 'lodash/mean'
 
 const DashboardMap = dynamic(() => import('@/components/dashboardMap'), {
   // loading: () => <p>Loading...</p>,
@@ -77,7 +78,7 @@ const DataTable = ({ data }) => {
         id: 'safety',
         accessor: (row) => row?.watchers?.scores?.safety,
         Cell: ({ value }) =>
-          value ? (
+          value > -1 ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
               {value?.toFixed(0)}
             </Tag>
@@ -90,7 +91,7 @@ const DataTable = ({ data }) => {
         id: 'accessibility',
         accessor: (row) => row?.watchers?.scores?.accessibility,
         Cell: ({ value }) =>
-          value ? (
+          value > -1 ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
               {value?.toFixed(0)}
             </Tag>
@@ -103,7 +104,7 @@ const DataTable = ({ data }) => {
         id: 'wayfinding',
         accessor: (row) => row?.watchers?.scores?.wayfinding,
         Cell: ({ value }) =>
-          value ? (
+          value > -1 ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
               {value?.toFixed(0)}
             </Tag>
@@ -116,7 +117,7 @@ const DataTable = ({ data }) => {
         id: 'comfort',
         accessor: (row) => row?.watchers?.scores?.comfort,
         Cell: ({ value }) =>
-          value ? (
+          value > -1 ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
               {value?.toFixed(0)}
             </Tag>
@@ -127,9 +128,14 @@ const DataTable = ({ data }) => {
       {
         Header: 'Overall',
         id: 'overall',
-        accessor: (row) => row?.watchers?.scores?.overall,
+        accessor: (row) => {
+          const scoresValues = row?.watchers?.scores
+            ? Object.values(row.watchers.scores)
+            : []
+          return scoresValues.includes('') ? '' : mean(scoresValues)
+        },
         Cell: ({ value }) =>
-          value ? (
+          value > -1 ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
               {value?.toFixed(0)}
             </Tag>

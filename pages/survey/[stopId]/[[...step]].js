@@ -29,7 +29,12 @@ import { prismaGetQuestions } from '@/lib/prisma/questions'
 import { prismaGetWatcher } from '@/lib/prisma/watchers'
 import { postSurvey } from '@/lib/axios/survey'
 
-export default function SurveyStep({ stop, watcher, questions, answers }) {
+export default function SurveyStep({
+  stop,
+  watcherStatus,
+  questions,
+  answers,
+}) {
   const router = useRouter()
   const { step, stopId } = router.query
 
@@ -47,7 +52,7 @@ export default function SurveyStep({ stop, watcher, questions, answers }) {
     if (parseInt(step) === answers.length) {
       await postSurvey(stopId, {
         answers: form.survey,
-        status: watcher.status,
+        status: watcherStatus,
       })
       router.push(`/survey/${stopId}/thank-you`)
     } else {
@@ -188,7 +193,7 @@ export const getServerSideProps = async ({ query }) => {
   const questions = await prismaGetQuestions()
 
   const questionCount = 5
-  let watcherStatus = [...watcher.status]
+  let watcherStatus = watcher?.status || questions.map((q) => parseInt(q.id))
 
   // TODO: Make sure you check to make sure a a duplicate question isnt added after the watcher is refilled
   const answers = [...new Array(questionCount)].reduce((acc) => {
@@ -209,11 +214,12 @@ export const getServerSideProps = async ({ query }) => {
         createdAt: stop.createdAt.toISOString(),
         updatedAt: stop.updatedAt.toISOString(),
       },
-      watcher: {
-        ...watcher,
-        createdAt: watcher.createdAt.toISOString(),
-        updatedAt: watcher.updatedAt.toISOString(),
-      },
+      watcherStatus,
+      // watcher: {
+      //   ...watcher,
+      //   createdAt: watcher.createdAt.toISOString(),
+      //   updatedAt: watcher.updatedAt.toISOString(),
+      // },
       answers,
       questions: questions.map((q) => ({
         ...q,

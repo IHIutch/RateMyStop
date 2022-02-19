@@ -26,13 +26,7 @@ import NextLink from 'next/link'
 import { useMemo } from 'react'
 import groupBy from 'lodash/groupBy'
 
-export default function SingleStop({
-  stop,
-  watcher,
-  questions,
-  answers,
-  categories,
-}) {
+export default function SingleStop({ stop, questions, answers, categories }) {
   const groupedQuestions = useMemo(() => {
     return groupBy(questions, 'categoryId')
   }, [questions])
@@ -117,7 +111,9 @@ export default function SingleStop({
 const AnswerTag = ({ answers, questionId }) => {
   const { value } = answers
     .sort((a, b) => b.id - a.id)
-    .find((a) => parseInt(a.questionId) === parseInt(questionId))
+    .find((a) => parseInt(a.questionId) === parseInt(questionId)) || {
+    value: null,
+  }
 
   return (
     <Tag
@@ -145,11 +141,13 @@ export async function getServerSideProps({ query }) {
         createdAt: stop.createdAt.toISOString(),
         updatedAt: stop.updatedAt.toISOString(),
       },
-      watcher: {
-        ...watcher,
-        createdAt: watcher.createdAt.toISOString(),
-        updatedAt: watcher.updatedAt.toISOString(),
-      },
+      watcher: watcher
+        ? {
+            ...watcher,
+            createdAt: watcher.createdAt.toISOString(),
+            updatedAt: watcher.updatedAt.toISOString(),
+          }
+        : {},
       answers: answers.map((a) => ({
         ...a,
         createdAt: a.createdAt.toISOString(),
