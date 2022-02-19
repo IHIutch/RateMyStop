@@ -64,10 +64,10 @@ const DataTable = ({ data }) => {
 
   const columns = useMemo(
     () => [
-      {
-        Header: 'Rank',
-        accessor: 'rank',
-      },
+      // {
+      //   Header: 'Rank',
+      //   accessor: 'rank',
+      // },
       {
         Header: 'Stop Name',
         accessor: 'stopName',
