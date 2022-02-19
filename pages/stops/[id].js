@@ -37,8 +37,6 @@ export default function SingleStop({
     return groupBy(questions, 'categoryId')
   }, [questions])
 
-  console.log({ groupedQuestions })
-
   return (
     <DefaultLayout>
       <Container maxW="container.md" py="12">
@@ -117,9 +115,9 @@ export default function SingleStop({
 }
 
 const AnswerTag = ({ answers, questionId }) => {
-  const { value } = answers.find(
-    (a) => parseInt(a.questionId) === parseInt(questionId)
-  )
+  const { value } = answers
+    .sort((a, b) => b.id - a.id)
+    .find((a) => parseInt(a.questionId) === parseInt(questionId))
 
   return (
     <Tag
