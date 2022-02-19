@@ -94,7 +94,7 @@ const Start = () => {
   return (
     <Box bg="white" shadow="sm" p="4">
       <Box textAlign="center">
-        <NextLink href={`/survey/${stopId}/1`} passHref>
+        <NextLink href={`/survey/${stopId}/1`} passHref shallow>
           <Button as={Link} colorScheme="blue">
             Start Survey
           </Button>
@@ -197,7 +197,11 @@ export const getServerSideProps = async ({ query }) => {
 
   // TODO: Make sure you check to make sure a a duplicate question isnt added after the watcher is refilled
   const answers = [...new Array(questionCount)].reduce((acc) => {
-    const idx = Math.floor(Math.random() * watcherStatus.length)
+    let idx
+    do {
+      idx = Math.floor(Math.random() * watcherStatus.length)
+      // eslint-disable-next-line no-loop-func
+    } while (acc.some((a) => a.questionId === watcherStatus[idx]))
     const question = questions.find(
       (q) => parseInt(q.id) === parseInt(watcherStatus[idx])
     )
