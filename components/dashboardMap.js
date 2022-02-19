@@ -12,6 +12,7 @@ import {
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import NextLink from 'next/link'
+import mean from 'lodash/mean'
 
 export default function DashboardMap({ markers }) {
   const [popup, setPopup] = useState(null)
@@ -41,25 +42,26 @@ export default function DashboardMap({ markers }) {
     >
       <MapContainer
         style={{ height: '100%', width: '100%' }}
-        center={[42.886, -78.879]}
-        zoom={13}
+        // center={[42.886, -78.879]}
+        center={[42.9071, -78.7777]}
+        zoom={11}
         preferCanvas={true}
         zoomControl={false}
       >
         <ZoomControl position="topright" />
         <TileLayer
           attribution='Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
-          url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`}
+          url={`https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`}
         />
         <FeatureGroup>
-          {markers &&
-            markers.map((m, idx) => (
-              <MapMarker key={idx} data={m} onClick={setPopup} />
-            ))}
+          {markers?.map((m, idx) => (
+            <MapMarker key={idx} data={m} onClick={setPopup} />
+          ))}
           <Popup>
             {popup && (
               <Box p="4">
                 {popup.stopName}
+                {popup.id}
                 <Box textAlign="right">
                   <NextLink passHref href={`stops/${popup.id}`}>
                     <Link
@@ -87,19 +89,26 @@ export default function DashboardMap({ markers }) {
 const MapMarker = ({ onClick, data }) => {
   const map = useMap()
   const handleClick = (latlng) => {
-    map.flyTo(latlng, map.getZoom())
+    // map.flyTo(latlng, map.getZoom())
     onClick(data)
   }
 
-  const markerColor =
-    data.Watchers?.scores?.overall >= 90
-      ? 'green'
-      : data.Watchers?.scores?.overall < 90 &&
-        data.Watchers?.scores?.overall >= 50
-      ? 'yellow'
-      : 'red'
+  const overall =
+    data?.watchers?.scores &&
+    !Object.values(data.watchers.scores).includes('-1')
+      ? mean(Object.values(data.watchers.scores))
+      : '-1'
 
-  const color = useToken('colors', `${markerColor}.500`)
+  const markerColor =
+    overall >= 90
+      ? 'green.500'
+      : overall >= 50
+      ? 'yellow.500'
+      : overall >= 0
+      ? 'red.500'
+      : 'black'
+
+  const color = useToken('colors', markerColor)
 
   return (
     <CircleMarker
@@ -107,12 +116,12 @@ const MapMarker = ({ onClick, data }) => {
         click: (e) => handleClick(e.latlng),
       }}
       center={{ lat: data.stopLat, lng: data.stopLon }}
-      radius={4}
+      radius={markerColor === 'black' ? 2 : 5}
       pathOptions={{
         color,
         fillOpacity: 1,
         // opacity: 0.3,
-        // weight: 10,
+        weight: 0,
       }}
     />
   )
