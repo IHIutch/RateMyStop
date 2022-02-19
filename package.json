@@ -6,7 +6,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "eslint --ext .js,.jsx --ignore-path .gitignore . --fix"
+    "lint:fix": "eslint --ext .js,.jsx --ignore-path .gitignore . --fix",
+    "vercel-build": "prisma generate && next build",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.8.1",
