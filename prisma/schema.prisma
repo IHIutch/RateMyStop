@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Answers {
+model answers {
   id         Int        @id @default(autoincrement())
   value      String?
   questionId Int?
@@ -15,33 +15,39 @@ model Answers {
   sessionId  String?    @db.Uuid
   createdAt  DateTime   @default(now()) @db.Timestamptz()
   updatedAt  DateTime   @default(now()) @updatedAt @db.Timestamptz()
-  Questions  Questions? @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  Stops      Stops?     @relation(fields: [stopId], references: [id], onDelete: Cascade)
+  questions  questions? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  stops      stops?     @relation(fields: [stopId], references: [id], onDelete: Cascade)
+
+  @@map("Answers")
 }
 
-model Categories {
+model categories {
   id        Int         @id @default(autoincrement())
   text      String?     @db.VarChar(255)
   value     String?     @db.VarChar(255)
   createdAt DateTime    @default(now()) @db.Timestamptz()
   updatedAt DateTime    @default(now()) @updatedAt @db.Timestamptz()
-  Questions Questions[]
+  questions questions[]
+
+  @@map("Categories")
 }
 
-model Questions {
+model questions {
   id         Int         @id @default(autoincrement())
   text       String?     @db.VarChar(255)
   type       String?     @db.VarChar(255)
-  answers    Json?       @db.Json
+  // answers    Json?       @db.Json
   categoryId Int?
   active     Boolean?    @default(true)
   createdAt  DateTime    @default(now()) @db.Timestamptz()
   updatedAt  DateTime    @default(now()) @updatedAt @db.Timestamptz()
-  Categories Categories? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  Answers    Answers[]
+  categories categories? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  answers    answers[]
+
+  @@map("Questions")
 }
 
-model Stops {
+model stops {
   id                 Int       @id @default(autoincrement())
   stopName           String?   @db.VarChar(255)
   stopId             Int?
@@ -53,24 +59,30 @@ model Stops {
   wheelchairBoarding Boolean?
   createdAt          DateTime  @default(now()) @db.Timestamptz()
   updatedAt          DateTime  @default(now()) @updatedAt @db.Timestamptz()
-  Answers            Answers[]
-  Watchers           Watchers?
+  answers            answers[]
+  watchers           watchers?
+
+  @@map("Stops")
 }
 
-model Watchers {
+model watchers {
   id        Int      @id @default(autoincrement())
   stopId    Int?     @unique
   status    Json?
   scores    Json?
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
-  Stops     Stops?   @relation(fields: [stopId], references: [id], onDelete: Cascade)
+  stops     stops?   @relation(fields: [stopId], references: [id], onDelete: Cascade)
+
+  @@map("Watchers")
 }
 
-model Users {
+model users {
   id        Int      @id @default(autoincrement())
   email     String   @db.VarChar(255)
   password  String   @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  @@map("Users")
 }

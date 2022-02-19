@@ -75,7 +75,7 @@ const DataTable = ({ data }) => {
       {
         Header: 'Safety',
         id: 'safety',
-        accessor: (row) => row?.Watchers?.scores?.safety,
+        accessor: (row) => row?.watchers?.scores?.safety,
         Cell: ({ value }) =>
           value ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
@@ -88,7 +88,7 @@ const DataTable = ({ data }) => {
       {
         Header: 'Accessibility',
         id: 'accessibility',
-        accessor: (row) => row?.Watchers?.scores?.accessibility,
+        accessor: (row) => row?.watchers?.scores?.accessibility,
         Cell: ({ value }) =>
           value ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
@@ -101,7 +101,7 @@ const DataTable = ({ data }) => {
       {
         Header: 'Wayfinding',
         id: 'wayfinding',
-        accessor: (row) => row?.Watchers?.scores?.wayfinding,
+        accessor: (row) => row?.watchers?.scores?.wayfinding,
         Cell: ({ value }) =>
           value ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
@@ -114,7 +114,7 @@ const DataTable = ({ data }) => {
       {
         Header: 'Comfort',
         id: 'comfort',
-        accessor: (row) => row?.Watchers?.scores?.comfort,
+        accessor: (row) => row?.watchers?.scores?.comfort,
         Cell: ({ value }) =>
           value ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
@@ -127,7 +127,7 @@ const DataTable = ({ data }) => {
       {
         Header: 'Overall',
         id: 'overall',
-        accessor: (row) => row?.Watchers?.scores?.overall,
+        accessor: (row) => row?.watchers?.scores?.overall,
         Cell: ({ value }) =>
           value ? (
             <Tag size="sm" fontWeight="semibold" colorScheme={getColor(value)}>
@@ -200,11 +200,11 @@ export async function getServerSideProps() {
         ...s,
         createdAt: s.createdAt.toISOString(),
         updatedAt: s.updatedAt.toISOString(),
-        Watchers: s.Watchers
+        watchers: s.watchers
           ? {
-              ...s.Watchers,
-              createdAt: s.Watchers.createdAt.toISOString(),
-              updatedAt: s.Watchers.updatedAt.toISOString(),
+              ...s.watchers,
+              createdAt: s.watchers.createdAt.toISOString(),
+              updatedAt: s.watchers.updatedAt.toISOString(),
             }
           : null,
       })),
