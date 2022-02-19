@@ -27,6 +27,7 @@ import NextLink from 'next/link'
 import { prismaGetStop } from '@/lib/prisma/stops'
 import { prismaGetQuestions } from '@/lib/prisma/questions'
 import { prismaGetWatcher } from '@/lib/prisma/watchers'
+import { postSurvey } from '@/lib/axios/survey'
 
 export default function SurveyStep({ stop, watcher, questions, answers }) {
   const router = useRouter()
@@ -44,7 +45,11 @@ export default function SurveyStep({ stop, watcher, questions, answers }) {
 
   const onSubmit = async (form) => {
     if (parseInt(step) === answers.length) {
-      console.log({ form })
+      await postSurvey(stopId, {
+        answers: form.survey,
+        status: watcher.status,
+      })
+      router.push(`/survey/${stopId}/thank-you`)
     } else {
       router.push(`/survey/${stopId}/${parseInt(step) + 1}`, undefined, {
         shallow: true,
@@ -60,6 +65,7 @@ export default function SurveyStep({ stop, watcher, questions, answers }) {
             <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6">
               <GridItem colStart={{ md: '4' }} colSpan={{ md: '6' }}>
                 <Box mb="4">
+                  {JSON.stringify(answers.map((a) => a.questionId))}
                   <Heading fontSize="2xl">{stop.stopName}</Heading>
                   <Text fontWeight="semibold" color="gray.600">
                     Stop ID: {stop.stopCode}

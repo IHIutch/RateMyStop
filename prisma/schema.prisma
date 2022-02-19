@@ -13,8 +13,8 @@ model Answers {
   questionId Int?
   stopId     Int?
   sessionId  String?    @db.Uuid
-  createdAt  DateTime   @db.Timestamptz(6)
-  updatedAt  DateTime   @db.Timestamptz(6)
+  createdAt  DateTime   @default(now()) @db.Timestamptz()
+  updatedAt  DateTime   @default(now()) @updatedAt @db.Timestamptz()
   Questions  Questions? @relation(fields: [questionId], references: [id], onDelete: Cascade)
   Stops      Stops?     @relation(fields: [stopId], references: [id], onDelete: Cascade)
 }
@@ -23,8 +23,8 @@ model Categories {
   id        Int         @id @default(autoincrement())
   text      String?     @db.VarChar(255)
   value     String?     @db.VarChar(255)
-  createdAt DateTime    @db.Timestamptz(6)
-  updatedAt DateTime    @db.Timestamptz(6)
+  createdAt DateTime    @default(now()) @db.Timestamptz()
+  updatedAt DateTime    @default(now()) @updatedAt @db.Timestamptz()
   Questions Questions[]
 }
 
@@ -35,8 +35,8 @@ model Questions {
   answers    Json?       @db.Json
   categoryId Int?
   active     Boolean?    @default(true)
-  createdAt  DateTime    @db.Timestamptz(6)
-  updatedAt  DateTime    @db.Timestamptz(6)
+  createdAt  DateTime    @default(now()) @db.Timestamptz()
+  updatedAt  DateTime    @default(now()) @updatedAt @db.Timestamptz()
   Categories Categories? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   Answers    Answers[]
 }
@@ -51,8 +51,8 @@ model Stops {
   stopLon            Float?
   zoneId             Int?
   wheelchairBoarding Boolean?
-  createdAt          DateTime  @db.Timestamptz(6)
-  updatedAt          DateTime  @db.Timestamptz(6)
+  createdAt          DateTime  @default(now()) @db.Timestamptz()
+  updatedAt          DateTime  @default(now()) @updatedAt @db.Timestamptz()
   Answers            Answers[]
   Watchers           Watchers?
 }
@@ -62,8 +62,8 @@ model Watchers {
   stopId    Int?     @unique
   status    Json?
   scores    Json?
-  createdAt DateTime @db.Timestamptz(6)
-  updatedAt DateTime @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
   Stops     Stops?   @relation(fields: [stopId], references: [id], onDelete: Cascade)
 }
 
@@ -71,6 +71,6 @@ model Users {
   id        Int      @id @default(autoincrement())
   email     String   @db.VarChar(255)
   password  String   @db.VarChar(255)
-  createdAt DateTime @db.Timestamptz(6)
-  updatedAt DateTime @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
 }
