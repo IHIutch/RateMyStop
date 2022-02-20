@@ -24,7 +24,7 @@ export default function App({ Component, pageProps, err }) {
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
-      Fathom.load('SAQFVIRH')
+      Fathom.load('OZBFJASH')
 
       function onRouteChangeComplete() {
         Fathom.trackPageview()
