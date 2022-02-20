@@ -17,11 +17,11 @@ import {
   Link,
   LinkBox,
   LinkOverlay,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
+  // NumberDecrementStepper,
+  // NumberIncrementStepper,
+  // NumberInput,
+  // NumberInputField,
+  // NumberInputStepper,
   Select,
   Table,
   Tag,
@@ -58,6 +58,7 @@ import {
   Search,
   Table as TableIcon,
 } from 'lucide-react'
+import 'regenerator-runtime/runtime' // Fix NextJS/Vercel bug https://github.com/TanStack/react-table/issues/2071
 
 const DashboardMap = dynamic(() => import('@/components/dashboardMap'), {
   ssr: false,
