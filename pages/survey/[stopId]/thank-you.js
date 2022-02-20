@@ -11,13 +11,43 @@ import {
   Heading,
   Text,
   Link,
+  IconButton,
+  Icon,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
+import { Facebook, Share2, Twitter } from 'lucide-react'
 
 export default function SurveyComplete({ stop }) {
   const router = useRouter()
   const { stopId } = router.query
+
+  const shareText = `I just completed the survey for ${stop.stopName}.`
+  const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL}/survey/${stopId}`
+
+  const handleFacebookShare = () => {
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
+      'facebook-share-dialog',
+      'width=626,height=436'
+    )
+  }
+
+  const handleTwitterShare = () => {
+    window.open(
+      `https://twitter.com/share?text=${shareText}&url=${shareUrl}`,
+      'twitter-share-dialog',
+      'width=626,height=436'
+    )
+  }
+
+  const handleShareApi = () => {
+    navigator.share({
+      title: 'Rate My Stop',
+      url: shareUrl,
+      text: shareText,
+    })
+  }
 
   return (
     <DefaultLayout>
@@ -56,20 +86,26 @@ export default function SurveyComplete({ stop }) {
                     community!
                   </Text>
                   <ButtonGroup>
-                    <Button
+                    <IconButton
                       colorScheme="facebook"
-                      variant="ghost"
-                      onClick={() => console.log('facebook')}
-                    >
-                      Share on Facebook
-                    </Button>
-                    <Button
+                      aria-label="Share on Facebook"
+                      icon={<Icon as={Facebook} />}
+                      onClick={handleFacebookShare}
+                    />
+                    <IconButton
                       colorScheme="twitter"
-                      variant="ghost"
-                      onClick={() => console.log('twitter')}
-                    >
-                      Share on Twitter
-                    </Button>
+                      aria-label="Share on Twitter"
+                      icon={<Icon as={Twitter} />}
+                      onClick={handleTwitterShare}
+                    />
+                    {navigator.share && (
+                      <IconButton
+                        colorScheme="gray"
+                        aria-label="Share Link"
+                        icon={<Icon as={Share2} />}
+                        onClick={handleShareApi}
+                      />
+                    )}
                   </ButtonGroup>
                 </Box>
               </Box>

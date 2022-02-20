@@ -70,7 +70,8 @@ export default function SurveyStep({
             <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6">
               <GridItem colStart={{ md: '4' }} colSpan={{ md: '6' }}>
                 <Box mb="4">
-                  {JSON.stringify(answers.map((a) => a.questionId))}
+                  {process.env.NODE_ENV !== 'production' &&
+                    JSON.stringify(answers.map((a) => a.questionId))}
                   <Heading fontSize="2xl">{stop.stopName}</Heading>
                   <Text fontWeight="semibold" color="gray.600">
                     Stop ID: {stop.stopCode}
@@ -149,7 +150,7 @@ const Footer = () => {
 
   const {
     getValues,
-    formState: { dirtyFields },
+    formState: { dirtyFields, isSubmitting },
   } = useFormContext()
 
   const answers = getValues('survey')
@@ -166,7 +167,7 @@ const Footer = () => {
         >
           <Box>
             <Button
-              isDisabled={parseInt(step) - 1 === 0}
+              isDisabled={isSubmitting || parseInt(step) - 1 === 0}
               onClick={() => router.back()}
             >
               Prev
@@ -177,6 +178,7 @@ const Footer = () => {
               type="submit"
               isDisabled={!dirtyFields?.survey?.[step - 1]?.answer}
               colorScheme="blue"
+              isLoading={isSubmitting}
             >
               {parseInt(step) === answers.length ? 'Submit' : 'Next'}
             </Button>
