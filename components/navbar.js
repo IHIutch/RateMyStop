@@ -6,6 +6,9 @@ import {
   CloseButton,
   Icon,
   Container,
+  Alert,
+  AlertIcon,
+  Text,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { Menu, X } from 'lucide-react'
@@ -49,6 +52,25 @@ const Navbar = () => {
         left="0"
         right="0"
       >
+        <Alert status="warning" size="sm" justifyContent={{ lg: 'center' }}>
+          <AlertIcon />
+          <Text fontSize="sm">
+            <Text as="span" fontWeight="semibold">
+              RateMyStop
+            </Text>{' '}
+            is still in early development. Please provide any feedback or report
+            bugs{' '}
+            <Link
+              fontWeight="semibold"
+              textDecoration="underline"
+              href="https://forms.gle/q2bVZ394pqRKbT2G8"
+              isExternal
+            >
+              using our feedback form
+            </Link>
+            .
+          </Text>
+        </Alert>
         <Container maxW="container.lg">
           <Flex wrap="wrap" align="center">
             <Box mr="12">
