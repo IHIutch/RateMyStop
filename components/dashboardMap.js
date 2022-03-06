@@ -61,7 +61,6 @@ export default function DashboardMap({ markers }) {
             {popup && (
               <Box p="4">
                 {popup.stopName}
-                {popup.id}
                 <Box textAlign="right">
                   <NextLink passHref href={`stops/${popup.id}`}>
                     <Link
