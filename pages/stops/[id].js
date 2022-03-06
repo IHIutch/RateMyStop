@@ -10,6 +10,8 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Alert,
+  AlertIcon,
   Box,
   Button,
   ButtonGroup,
@@ -21,6 +23,7 @@ import {
   Stack,
   Tag,
   Text,
+  Tooltip,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { useMemo } from 'react'
@@ -43,35 +46,47 @@ export default function SingleStop({ stop, questions, answers, categories }) {
         <SEO path={asPath} />
       </Head>
       <Container maxW="container.md" py="12">
-        <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6" mb="24">
-          <GridItem colSpan={{ md: '8' }}>
-            <Heading>{stop.stopName}</Heading>
-            <Stack direction="row" spacing="4">
-              <Text>
-                <Text as="span" fontWeight="semibold">
-                  Stop Code:{' '}
+        <Box mb="24">
+          <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6" mb="8">
+            <GridItem colSpan={{ md: '8' }}>
+              <Heading>{stop.stopName}</Heading>
+              <Stack direction="row" spacing="4">
+                <Text>
+                  <Text as="span" fontWeight="semibold">
+                    Stop Code:{' '}
+                  </Text>
+                  {stop.stopCode}
                 </Text>
-                {stop.stopCode}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="semibold">
-                  Coords:{' '}
+                <Text>
+                  <Text as="span" fontWeight="semibold">
+                    Coords:{' '}
+                  </Text>
+                  {stop.stopLat}, {stop.stopLon}
                 </Text>
-                {stop.stopLat}, {stop.stopLon}
-              </Text>
-            </Stack>
-          </GridItem>
-          <GridItem colSpan={{ md: '4' }}>
-            <ButtonGroup>
-              <Button>Print QR Code</Button>
-              <NextLink href={`/survey/${stop.id}`} passHref>
-                <Button as={Link} colorScheme="blue">
-                  Take Survey
-                </Button>
-              </NextLink>
-            </ButtonGroup>
-          </GridItem>
-        </Grid>
+              </Stack>
+            </GridItem>
+            <GridItem colSpan={{ md: '4' }}>
+              <ButtonGroup>
+                <Tooltip label="Coming Soon!">
+                  <Button>Print QR Code</Button>
+                </Tooltip>
+                <NextLink href={`/survey/${stop.id}`} passHref>
+                  <Button as={Link} colorScheme="blue">
+                    Take Survey
+                  </Button>
+                </NextLink>
+              </ButtonGroup>
+            </GridItem>
+          </Grid>
+          <Box>
+            <Alert status="info">
+              <AlertIcon />
+              Data below is for testing purposes, please feel free to take a
+              survey and submit any answers you wish. All answers will be reset
+              before our official launch. Thank you!
+            </Alert>{' '}
+          </Box>
+        </Box>
         <Stack spacing="12">
           {Object.entries(groupedQuestions).map(
             ([categoryId, questions], idx) => (
