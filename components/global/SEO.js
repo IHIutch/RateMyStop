@@ -3,10 +3,11 @@ import React from 'react'
 export default function SEO({
   title = 'Rate My Stop',
   description = 'Rate My Stop is a way for the public and transportation organizations to improve their communities by understanding the needs of their transportation system.',
-  image = '/meta.jpg',
+  imagePath = '/meta.jpg',
   path = '',
 }) {
   const url = `${process.env.NEXT_PUBLIC_APP_URL}${path}`
+  const image = `${process.env.NEXT_PUBLIC_APP_URL}${imagePath}`
   const attrs = [
     {
       name: 'title',
