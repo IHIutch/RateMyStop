@@ -6,7 +6,7 @@ export default function SEO({
   image = '/meta.jpg',
   path = '',
 }) {
-  const url = `${process.env.NEXT_PUBLIC_APP_URL}${path}`
+  const url = `${process.env.NEXT_PUBLIC_VERCEL_URL}${path}`
   const attrs = [
     {
       name: 'title',

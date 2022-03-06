@@ -28,7 +28,7 @@ export default function SurveyComplete({ stop }) {
   } = router
 
   const shareText = `I just completed the survey for ${stop.stopName}.`
-  const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL}/survey/${stopId}`
+  const shareUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/survey/${stopId}`
 
   const handleFacebookShare = () => {
     window.open(
