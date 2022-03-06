@@ -17,11 +17,6 @@ import {
   Link,
   LinkBox,
   LinkOverlay,
-  // NumberDecrementStepper,
-  // NumberIncrementStepper,
-  // NumberInput,
-  // NumberInputField,
-  // NumberInputStepper,
   Select,
   Table,
   Tag,
@@ -59,6 +54,8 @@ import {
   Table as TableIcon,
 } from 'lucide-react'
 import 'regenerator-runtime/runtime' // Fix NextJS/Vercel bug https://github.com/TanStack/react-table/issues/2071
+import Head from 'next/head'
+import SEO from '@/components/global/SEO'
 
 const DashboardMap = dynamic(() => import('@/components/dashboardMap'), {
   ssr: false,
@@ -69,6 +66,9 @@ export default function Home({ stops }) {
 
   return (
     <DefaultLayout>
+      <Head>
+        <SEO />
+      </Head>
       <Box
         bg="white"
         d={{ base: 'flex', lg: 'none' }}

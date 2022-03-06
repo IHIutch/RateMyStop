@@ -25,14 +25,23 @@ import {
 import NextLink from 'next/link'
 import { useMemo } from 'react'
 import groupBy from 'lodash/groupBy'
+import Head from 'next/head'
+import SEO from '@/components/global/SEO'
+import { useRouter } from 'next/router'
 
 export default function SingleStop({ stop, questions, answers, categories }) {
   const groupedQuestions = useMemo(() => {
     return groupBy(questions, 'categoryId')
   }, [questions])
 
+  const router = useRouter()
+  const { asPath } = router
+
   return (
     <DefaultLayout>
+      <Head>
+        <SEO path={asPath} />
+      </Head>
       <Container maxW="container.md" py="12">
         <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6" mb="24">
           <GridItem colSpan={{ md: '8' }}>

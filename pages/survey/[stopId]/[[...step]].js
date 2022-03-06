@@ -28,6 +28,8 @@ import { prismaGetStop } from '@/lib/prisma/stops'
 import { prismaGetQuestions } from '@/lib/prisma/questions'
 import { prismaGetWatcher } from '@/lib/prisma/watchers'
 import { postSurvey } from '@/lib/axios/survey'
+import Head from 'next/head'
+import SEO from '@/components/global/SEO'
 
 export default function SurveyStep({
   stop,
@@ -36,7 +38,10 @@ export default function SurveyStep({
   answers,
 }) {
   const router = useRouter()
-  const { step, stopId } = router.query
+  const {
+    asPath,
+    query: { step, stopId },
+  } = router
 
   const { handleSubmit, ...methods } = useForm({
     defaultValues: {
@@ -64,6 +69,9 @@ export default function SurveyStep({
 
   return (
     <DefaultLayout>
+      <Head>
+        <SEO path={asPath} />
+      </Head>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Container maxW="container.lg" pt="12">

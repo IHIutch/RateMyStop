@@ -17,10 +17,15 @@ import {
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { Facebook, Share2, Twitter } from 'lucide-react'
+import Head from 'next/head'
+import SEO from '@/components/global/SEO'
 
 export default function SurveyComplete({ stop }) {
   const router = useRouter()
-  const { stopId } = router.query
+  const {
+    asPath,
+    query: { stopId },
+  } = router
 
   const shareText = `I just completed the survey for ${stop.stopName}.`
   const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL}/survey/${stopId}`
@@ -51,6 +56,9 @@ export default function SurveyComplete({ stop }) {
 
   return (
     <DefaultLayout>
+      <Head>
+        <SEO path={asPath} />
+      </Head>
       <Container maxW="container.lg" pt="12">
         <Grid templateColumns={{ md: 'repeat(12, 1fr)' }} gap="6">
           <GridItem colStart={{ md: '4' }} colSpan={{ md: '6' }}>
