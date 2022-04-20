@@ -24,7 +24,9 @@ export default function App({ Component, pageProps, err }) {
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
-      Fathom.load('OZBFJASH')
+      Fathom.load('OZBFJASH', {
+        url: 'https://xyz.ratemystop.com/script.js',
+      })
 
       function onRouteChangeComplete() {
         Fathom.trackPageview()
